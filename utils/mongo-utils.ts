@@ -1,12 +1,17 @@
-// utils/mongo-utils.ts
-import { MongoClient } from "mongodb";
+import { MongoClient, Db } from "mongodb";
+import * as dotenv from 'dotenv';
 
-const uri = "mongodb://localhost:27017"; // Cambiá esto si usás Atlas u otro host
-const dbName = "bank";
+dotenv.config();
+
+const uri = process.env.MONGO_URI!
+const dbName = process.env.MONGO_DB!
+if (!uri) {
+    throw new Error('MONGO_URI is not defined in .env file');
+}
 
 let client: MongoClient;
 
-export async function connectToMongo() {
+export async function connectToMongo(): Promise<Db> {
     if (!client) {
         client = new MongoClient(uri);
         await client.connect();
