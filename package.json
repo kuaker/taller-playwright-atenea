@@ -10,5 +10,9 @@
   "devDependencies": {
     "@playwright/test": "^1.54.1",
     "@types/node": "^24.1.0"
+  },
+  "dependencies": {
+    "@types/mongodb": "^4.0.7",
+    "mongodb": "^6.18.0"
   }
 }
