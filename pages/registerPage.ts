@@ -21,11 +21,14 @@ export class RegisterPage {
         await this.page.goto('http://localhost:3000/signup');
     }
 
-    async register(nombre: string, apellido: string, email: string, password: string) {
+    async fillTheForm(nombre: string, apellido: string, email: string, password: string) {
         await this.nombreInput.fill(nombre);
         await this.apellidoInput.fill(apellido);
         await this.emailInput.fill(email);
         await this.passwordInput.fill(password);
+    }
+
+    async clickOnRegisterButton() {
         await this.registerButton.click();
     }
 }
