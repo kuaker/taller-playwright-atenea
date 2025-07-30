@@ -6,10 +6,13 @@ test.describe('MongoDB Tests', () => {
 
     test.beforeAll(async () => {
         db = await connectToMongo();
+        expect(db).toBeTruthy();
+        console.log('*** Conexión a MongoDB exitosa ***');
     })
 
     test.afterAll(async () => {
         await closeMongoConnection();
+        console.log('*** Conexión a MongoDB cerrada***');
     });
 
     test('TC1 - Consultar usuario', async () => {
@@ -19,7 +22,16 @@ test.describe('MongoDB Tests', () => {
 
         expect(user).toBeTruthy();
         expect(user?.firstName).toBe('Fernando');
-        await closeMongoConnection();
+    });
+
+    test('TC2 - Borrar usuarios', async () => {
+
+        const users = db.collection('users');
+        await users.deleteMany({
+            email: { $regex: 'farroupe', $options: 'i' }
+        });
+
+        console.log('Usuarios borrados');
     });
 
 })
