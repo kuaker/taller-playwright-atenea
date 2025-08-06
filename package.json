@@ -2,7 +2,10 @@
   "name": "taller-playwright-atenea",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "pw:run": "npx playwright test tests/*.*",
+    "login-tests": "npx playwright test tests/login-tests.spec.ts"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
