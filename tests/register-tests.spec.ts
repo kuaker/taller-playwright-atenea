@@ -53,3 +53,22 @@ test('TC3 - registro vía api', async ({ page, request }) => {
 
 });
 
+test('TC4 - Registro exitoso con datos válidos, verificando respuesta de API', async ({ page }) => {
+  await test.step('Completar el formulario de registro', async () => {
+    const randomEmail = `farroupe${Math.floor(Math.random() * 10000)}@example.com`;
+    await registerPage.navigate();
+    await registerPage.fillTheForm(
+      testData.usuarioValido.firstName,
+      testData.usuarioValido.lastName,
+      randomEmail,
+      testData.usuarioValido.password
+    );
+    const mensajeDeCreacionDeCuenta = page.waitForResponse('**/api/auth/signup');
+    await registerPage.clickOnRegisterButton();
+    const response = await mensajeDeCreacionDeCuenta;
+
+    expect(response.status()).toBe(201);
+    // expect(response.body).toHaveProperty('user');
+    expect(response.body).toHaveProperty('token');
+  });
+});
