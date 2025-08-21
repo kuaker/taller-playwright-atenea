@@ -26,7 +26,6 @@ jobs:
       MONGO_URI: ${{ secrets.MONGO_URI }}
       JWS_SECRET: ${{ secrets.JWT_SECRET }}
       PORT: ${{ secrets.PORT }}
-      VITE_API_BASE: ${{ secrets.VITE_API_BASE }}
 
     steps:
       - name: Checkout repor actual que incluye workflow
