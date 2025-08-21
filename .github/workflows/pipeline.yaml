@@ -1,8 +1,9 @@
-name: Pruebas
-
 ## Trigger para ejecutar
 ## push a la rama main
 ## pull request a la rama main
+
+name: Pruebas
+
 on:
   push:
     branches: [main]
