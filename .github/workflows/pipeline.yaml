@@ -56,7 +56,7 @@ jobs:
         run: npm install -g wait-on
 
       - name: Esperar a que el backend esté listo
-        run: wait-on tcp:6007
+        run: wait-on http:localhost:6007
 
       - name: Instalar dependencias del front-end
         run: |
