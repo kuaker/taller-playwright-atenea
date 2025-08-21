@@ -51,12 +51,16 @@ jobs:
         run: |
           cd app/backend
           npm run dev > backend.log 2>&1 &
+        env:
+          MONGO_URI: ${{ env.MONGO_URI }}
+          JWT_SECRET: ${{ env.JWT_SECRET }}
+          PORT: ${{ env.PORT }}
 
       - name: Instalar wait-on
         run: npm install -g wait-on
 
       - name: Esperar a que el backend esté listo
-        run: wait-on http://localhost:6007
+        run: wait-on tcp:6007
 
       - name: Instalar dependencias del front-end
         run: |
