@@ -1,8 +1,9 @@
-name: Pruebas
-
 ## Trigger para ejecutar
 ## push a la rama main
 ## pull request a la rama main
+
+name: Pruebas
+
 on:
   push:
     branches: [main]
@@ -25,11 +26,11 @@ jobs:
       MONGO_URI: ${{ secrets.MONGO_URI }}
       JWS_SECRET: ${{ secrets.JWT_SECRET }}
       PORT: ${{ secrets.PORT }}
-      VITE_API_BASE: ${{ secrets.VITE_API_BASE }}
+      VITE_API_BASE: http://localhost:6007/api
 
     steps:
       - name: Checkout repor actual que incluye workflow
-        uses: actions/checkout@4
+        uses: actions/checkout@v4
 
       - name: Clonar repo Athena Redux Bank
         run: |
@@ -37,17 +38,23 @@ jobs:
 
       - name: Crear un archivo .env para el backend
         run: |
-          echo "MONGO_URI=${{ secrets.MONGO_URI }}" > app/backend/.env
-          echo "JWS_SECRET=${{ secrets.JWT_SECRET }}" > app/backend/.env
-          echo "PORT=${{ secrets.PORT }}" > app/backend/.env
+          echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> app/backend/.env
+          echo "JWS_SECRET=${{ secrets.JWT_SECRET }}" >> app/backend/.env
+          echo "PORT=${{ secrets.PORT }}" >> app/backend/.env
 
       - name: Instalar dependencias para backend
-        run: cd app/backend && npm install
+        run: |
+          cd app/backend
+          npm install
 
       - name: Levantar el backend
         run: |
           cd app/backend
           npm run dev > backend.log 2>&1 &
+        env:
+          MONGO_URI: ${{ env.MONGO_URI }}
+          JWT_SECRET: ${{ env.JWT_SECRET }}
+          PORT: ${{ env.PORT }}
 
       - name: Instalar wait-on
         run: npm install -g wait-on
@@ -56,7 +63,9 @@ jobs:
         run: wait-on tcp:6007
 
       - name: Instalar dependencias del front-end
-        run: cd app/frontend && npm install
+        run: |
+          cd app/frontend
+          npm install
 
       - name: Levantar el frontend
         run: |
@@ -76,7 +85,7 @@ jobs:
 
       - name: Guardar reportes como artefactos
         if: always()
-        uses: actions/upload-artifact@4
+        uses: actions/upload-artifact@v4
         with:
           name: playwright-report
           path: ./playwright-report
@@ -90,11 +99,9 @@ jobs:
           # Clonar rama de gh-pages en carpeta temporal
           cd $RUNNER_TEMP
           git clone --branch gh-pages https://github.com/kuaker/taller-playwright-atenea.git gh-pages
-          git clone --branch gh-pages https:/x-access-token:${{ serets.GH_PAGES_PAT }}@github.com/${{github.repository}} gh-pages
-
+          git clone --branch gh-pages https:/x-access-token:${{ secrets.GH_PAGES_PAT }}@github.com/${{github.repository}} gh-pages
 
           cd gh-pages
-
           rm -rf ./*
 
           mkdir -p report-${GITHUB_RUN_NUMER}
@@ -108,4 +115,4 @@ jobs:
       - name: Imprimir URL reporte en consola
         if: always()
         run: |
-          echo " URL Reporte disponible en: https://${{gihub.reporsitory_owner}}.github.io${{github.event.repository.name}}/report-${{gitun.run.number}}/"
+          echo " URL Reporte disponible en: https://${{github.repository.owner}}.github.io${{github.event.repository.name}}/report-${{github.run_number}}/"
